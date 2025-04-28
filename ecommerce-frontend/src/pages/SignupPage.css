@@ -1,0 +1,109 @@
+/* Signup Page Styles */
+.signup-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to right, #ff9966, #ff5e62);
+    animation: fadeIn 1s ease-in-out;
+  }
+  
+  .signup-box {
+    background: white;
+    padding: 40px 50px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    animation: slideIn 0.8s ease-in-out;
+  }
+  
+  .signup-box h1 {
+    color: #333;
+    font-size: 26px;
+    margin-bottom: 20px;
+  }
+  
+  .input-group {
+    margin-bottom: 15px;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: 0.3s;
+  }
+  
+  .input-group input:focus {
+    border-color: #ff5e62;
+    outline: none;
+  }
+  
+  .signup-btn {
+    width: 100%;
+    padding: 12px;
+    background: #ff5e62;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .signup-btn:hover {
+    background: #ff3b4d;
+    transform: scale(1.05);
+  }
+  
+  .redirect-text {
+    margin-top: 15px;
+    color: #555;
+    font-size: 14px;
+  }
+  
+  .redirect-text span {
+    color: #ff5e62;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .redirect-text span:hover {
+    text-decoration: underline;
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideIn {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 500px) {
+    .signup-box {
+      width: 90%;
+      padding: 30px;
+    }
+    
+    .signup-btn {
+      font-size: 16px;
+    }
+  }
+  
