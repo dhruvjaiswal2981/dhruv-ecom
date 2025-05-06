@@ -141,7 +141,7 @@ A full-stack e-commerce platform for customized products with React.js frontend 
 
 - Backend Deployment
     - Live Demo: The application is hosted on Render
-    - Access it here: 
+    - Access it here: https://dhruv-ecom.onrender.com
 
 - Frontend Deployment
     - Live Demo: The application is hosted on Netlify.
