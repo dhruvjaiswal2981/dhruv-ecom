@@ -1,5 +1,4 @@
-const Cart = require('../models/cart');
-const Product = require('../models/product');
+const { Cart, Product } = require('../models/associations');
 
 exports.getCart = async (req, res) => {
   try {
@@ -7,13 +6,30 @@ exports.getCart = async (req, res) => {
       where: { userId: req.user.id },
       include: [{
         model: Product,
+        as: 'Product', // Make sure this matches your association alias
+        required: true, // This ensures INNER JOIN
         attributes: ['id', 'name', 'price', 'imageUrl', 'customizable']
       }]
     });
 
-    res.json(cartItems);
+    // Transform the data to ensure consistent structure
+    const formattedCart = cartItems.map(item => ({
+      id: item.id,
+      quantity: item.quantity,
+      customization: item.customization,
+      Product: {
+        id: item.Product.id,
+        name: item.Product.name,
+        price: item.Product.price,
+        imageUrl: item.Product.imageUrl,
+        customizable: item.Product.customizable
+      }
+    }));
+
+    res.json(formattedCart);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Error fetching cart:', error);
+    res.status(500).json({ message: 'Error loading cart' });
   }
 };
 

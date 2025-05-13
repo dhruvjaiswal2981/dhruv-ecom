@@ -10,39 +10,44 @@ export const CartProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   const fetchCart = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await getCart();
-      if (response.data) {
-        // Transform data to ensure consistent structure
-        const formattedCart = response.data.map(item => ({
-          id: item.id,
-          quantity: item.quantity,
-          customization: item.customization,
-          Product: item.Product || item.product // Handle both cases
-        }));
-        setCart(formattedCart);
-      }
-    } catch (err) {
-      console.error('Cart fetch error:', err);
-      setError(err.response?.data?.message || 'Failed to load cart');
-      setCart([]);
-    } finally {
-      setLoading(false);
+  setLoading(true);
+  setError(null);
+  try {
+    const response = await getCart();
+    
+    if (response && Array.isArray(response)) {
+      // Ensure each item has the proper structure
+      const formattedCart = response.map(item => ({
+        id: item.id,
+        quantity: item.quantity,
+        customization: item.customization || null,
+        Product: item.Product || null // Handle cases where Product might be null
+      }));
+      
+      setCart(formattedCart);
+    } else {
+      throw new Error('Invalid cart data structure');
     }
-  };
+  } catch (err) {
+    console.error('Cart fetch error:', err);
+    setError(err.response?.data?.message || 'Failed to load cart');
+    setCart([]);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const addToCart = async (productId, quantity = 1, customization = null) => {
     try {
+      setLoading(true); // Add loading state during add to cart
       const response = await apiAddToCart({ 
         productId, 
         quantity, 
         customization 
       });
       
-      if (response.data) {
-        await fetchCart(); // Refresh the entire cart
+      if (response) {
+        await fetchCart(); // Wait for the cart to refresh
         toast.success('Added to cart successfully!');
         return true;
       }
@@ -50,8 +55,11 @@ export const CartProvider = ({ children }) => {
       console.error('Add to cart error:', error);
       toast.error(error.response?.data?.message || 'Failed to add to cart');
       return false;
+    } finally {
+      setLoading(false);
     }
   };
+
 
   const updateCartItem = async (id, updates) => {
     try {

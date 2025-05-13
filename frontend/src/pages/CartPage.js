@@ -3,10 +3,29 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import CartItem from '../components/cart/CartItem';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import { useEffect } from 'react';
 
 const CartPage = () => {
-  const { cart, cartTotal, cartCount, loading, removeFromCart, updateCartItem, clearCart } = useCart();
+  const { 
+    cart, 
+    cartTotal, 
+    cartCount, 
+    loading, 
+    error,
+    removeFromCart, 
+    updateCartItem, 
+    clearCart,
+    fetchCart // Make sure this is available from your context
+  } = useCart();
+  
   const navigate = useNavigate();
+
+  // Add this useEffect to log cart data for debugging
+  useEffect(() => {
+    console.log('Current cart:', cart);
+    console.log('Cart count:', cartCount);
+    console.log('Loading state:', loading);
+  }, [cart, cartCount, loading]);
 
   const handleCheckout = () => {
     if (cartCount === 0) {
@@ -16,12 +35,34 @@ const CartPage = () => {
     navigate('/checkout');
   };
 
+  // Show error message if there's an error
+  if (error) {
+    return (
+      <div className="bg-gray-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-8 text-center">
+          <h3 className="text-lg font-medium text-red-600">Error loading cart</h3>
+          <p className="mt-2 text-gray-600">{error}</p>
+          <button
+            onClick={fetchCart}
+            className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (loading) {
-    return <LoadingSpinner />;
+    return (
+      <div className="bg-gray-50 min-h-screen flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 mb-8">Shopping Cart</h1>
         
@@ -45,14 +86,22 @@ const CartPage = () => {
             <div className="lg:col-span-8">
               <div className="bg-white shadow overflow-hidden sm:rounded-lg">
                 <ul className="divide-y divide-gray-200">
-                  {cart.map((item) => (
-                    <CartItem
-                      key={item.id}
-                      item={item}
-                      onRemove={() => removeFromCart(item.id)}
-                      onUpdate={(updates) => updateCartItem(item.id, updates)}
-                    />
-                  ))}
+                  {cart.map((item) => {
+                    // Add null check for item.Product
+                    if (!item.Product) {
+                      console.warn('Cart item missing Product data:', item);
+                      return null;
+                    }
+                    
+                    return (
+                      <CartItem
+                        key={item.id}
+                        item={item}
+                        onRemove={() => removeFromCart(item.id)}
+                        onUpdate={(updates) => updateCartItem(item.id, updates)}
+                      />
+                    );
+                  })}
                 </ul>
               </div>
               
@@ -82,7 +131,7 @@ const CartPage = () => {
                 <div className="mt-6">
                   <button
                     onClick={handleCheckout}
-                    className="w-full flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                    className="w-full flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                   >
                     Checkout
                   </button>

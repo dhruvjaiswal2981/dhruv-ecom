@@ -29,8 +29,10 @@ const Cart = sequelize.define('Cart', {
     defaultValue: 1
   },
   customization: {
-    type: DataTypes.TEXT
+    type: DataTypes.JSON // Changed from TEXT to JSON for better handling
   }
+}, {
+  timestamps: true // Add createdAt and updatedAt fields
 });
 
 module.exports = Cart;

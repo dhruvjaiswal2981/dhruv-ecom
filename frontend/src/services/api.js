@@ -53,13 +53,14 @@ export const deleteProduct = (id) => api.delete(`/products/${id}`);
 
 // Cart API
 export const getCart = () => api.get('/cart')
-  .then(res => res.data)
+  .then(res => res.data)  // Ensure this is returning the actual data
   .catch(err => {
     console.error('Error getting cart:', err);
     throw err;
   });
-  export const addToCart = (cartItem) => api.post('/cart', cartItem)
-  .then(res => res.data)
+
+export const addToCart = (cartItem) => api.post('/cart', cartItem)
+  .then(res => res.data)  // Ensure this is returning the actual data
   .catch(err => {
     console.error('Error adding to cart:', err);
     throw err;
