@@ -11,19 +11,22 @@ const OrdersPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const response = await getUserOrders();
-        setOrders(response.data);
-      } catch (error) {
-        toast.error('Failed to load orders');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchOrders = async () => {
+    try {
+      console.log('Fetching orders...'); // Debug log
+      const response = await getUserOrders();
+      console.log('Orders response:', response); // Debug log
+      setOrders(response.data);
+    } catch (error) {
+      console.error('Error fetching orders:', error); // Debug log
+      toast.error('Failed to load orders');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchOrders();
-  }, [user]);
+  fetchOrders();
+}, [user]);
 
   if (loading) {
     return <LoadingSpinner />;
